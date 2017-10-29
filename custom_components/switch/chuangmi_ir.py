@@ -18,14 +18,14 @@ from homeassistant.const import (CONF_SWITCHES,
 import homeassistant.helpers.config_validation as cv
 from homeassistant.util.dt import utcnow
 
-REQUIREMENTS = ['python-miio==0.0.8']
+REQUIREMENTS = ['python-miio==0.3.0']
 
 _LOGGER = logging.getLogger(__name__)
 
 DEVICE_DEFAULT_NAME = 'chuang_mi_ir'
 SWITCH_DEFAULT_NAME = 'chuang_mi_ir_switch'
 DOMAIN = "chuangmi"
-DEFAULT_TIMEOUT = 10
+DEFAULT_TIMEOUT = 20
 DEFAULT_RETRY = 3
 SERVICE_LEARN = "learn_command"
 SERVICE_SEND = "send_packet"
@@ -57,7 +57,7 @@ def setup_platform(hass, config, add_devices, discovery_info=None):
 
     @asyncio.coroutine
     def _learn_command(call):
-        ir_remote = miio.device(host, token)
+        ir_remote = miio.Device(host, token)
         if not ir_remote:
             _LOGGER.error("Failed to connect to device.")
             return
@@ -86,7 +86,7 @@ def setup_platform(hass, config, add_devices, discovery_info=None):
 
     @asyncio.coroutine
     def _send_packet(call):
-        ir_remote = miio.device(host, token)
+        ir_remote = miio.Device(host, token)
         if not ir_remote:
             _LOGGER.error("Failed to connect to device.")
             return
@@ -100,7 +100,7 @@ def setup_platform(hass, config, add_devices, discovery_info=None):
                 except (socket.timeout, ValueError):
                     _LOGGER.error("Failed to send packet to device.")
 
-    ir_remote = miio.device(host, token)
+    ir_remote = miio.Device(host, token)
     if not ir_remote:
         _LOGGER.error("Failed to connect to device.")
 
